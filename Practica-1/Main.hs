@@ -22,24 +22,30 @@ absoluto n = if n >= 0 then  n else -n
 
 -- La función divE n m, que recibe dos enteros y devuelve la división entera de n y m.
 divE :: Int -> Int -> Int
-divE n m = mod n m
+divE n m = if (n < m)
+        then n 
+        else divE (n-m) m 
 
 -- Tu propia versión de head y tail que se llamen cabeza y cola respectivamente.
 cabeza :: [Int] -> Int 
-cabeza list = list!!0
+cabeza [x] = x
+cabeza (x:xs) = x
 
 cola :: [Int] -> [Int] 
-cola list = drop 1 list
+cola [] = []
+cola (x:xs) = xs
 
 -- La función quita n lst, que recibe un número entero positivo n y una lista lst para devol-
 -- ver lst pero sin sus primeros n elementos.
 quita :: Int -> [Int] -> [Int]
-quita n lst = drop n lst
+quita 0 lst = lst
+quita n (x:xs) = quita (n-1) xs 
 
 -- La función enesimo n lst que toma un entero n y una lista lst para regresar el enésimo
 -- elemento de lst. Los computologos siempre empezamos a contar desde el cero.
 enesimo :: Int -> [Int] -> Int
-enesimo n lst = lst!!(n)
+enesimo 0 lst = cabeza lst
+enesimo n (x:xs) = enesimo (n-1) xs
 
 
 
