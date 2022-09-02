@@ -62,12 +62,14 @@ absoluto n = if n >= 0 then  n else -n
 
 **La función divE**
 
-Esta función es un poco diferente a las demás ya que lo que hice fue una firma de 3 int ya que recibe dos números enteros y regreso un número entero. Lo primero es sacar la división de n entre m y después a este resultado restarle el modulo de n entre m para finalmente dividirlo entre m y así obtener el resultado de la división entera.
-Los preludios de esta función son _div_ que es una función que regresa la división entera de dos números y _mod_ que es una función que regresa el módulo de una división.
+Esta función es un poco diferente a las demás ya que lo que hice fue una firma de 3 int que recibe _n_ y _m_ y regresa un tercer número entero. Para solucionar por completo el problema de la división entera lo que hice fue utilizar una función auxiliar que se llama _divEAux_ que recibe 3 int y regresa un int, lo que hace esta función es que recibe _n_ y _m_ y un contador que empieza en 0 y va aumentando cada vez que se cumple la condición de que _n_ no sea menor a _m_ entonces regreso el contador más 1 ya que es la cantidad de veces que se cumplió la condición de que _n_ era menor a _m_ hasta que ya no se cumpliera y así regresar el resultado de la división entera.Si _n_ es menor a _m_ entonces regreso el contador ya que es la cantidad de veces que se cumplió la condición de que _n_ era menor a _m_.
 
 ```
 divE :: Int -> Int -> Int
-divE n m = (div n m) - (mod n m) `div` m
+divE n m = divEAux n m 0
+
+divEAux :: Int -> Int -> Int -> Int
+divEAux n m acc = if (n < m) then acc else divEAux (n-m) m (acc+1)
 ```
 
 ---
