@@ -62,10 +62,10 @@ absoluto n = if n >= 0 then  n else -n
 
 **La función divE**
 
-Esta función es un poco diferente a las demás ya que lo que hice fue una firma de 3 int que recibe _n_ y _m_ y regresa un tercer número entero. Para solucionar por completo el problema de la división entera lo que hice fue utilizar una función auxiliar que se llama _divEAux_ que recibe 3 int y regresa un int, lo que hace esta función es que recibe _n_ y _m_ y un contador que empieza en 0 y va aumentando cada vez que se cumple la condición de que _n_ no sea menor a _m_ entonces regreso el contador más 1 ya que es la cantidad de veces que se cumplió la condición de que _n_ era menor a _m_ hasta que ya no se cumpliera y así regresar el resultado de la división entera.Si _n_ es menor a _m_ entonces regreso el contador ya que es la cantidad de veces que se cumplió la condición de que _n_ era menor a _m_.
+Esta función es un poco diferente a las demás ya que lo que hice fue una firma de 3 int que recibe _n_ y _m_ y regresa un tercer número entero. Primero veo si están tratando de dividir con 0 para en ese caso buscar el patrón y regresar un error. Para solucionar por completo el problema de la división entera lo que hice fue utilizar una función auxiliar que se llama _divEAux_ que recibe 3 int y regresa un int, lo que hace esta función es que recibe _n_ y _m_ y un contador que empieza en 0 y va aumentando cada vez que se cumple la condición de que _n_ no sea menor a _m_ entonces regreso el contador más 1 ya que es la cantidad de veces que se cumplió la condición de que _n_ era menor a _m_ hasta que ya no se cumpliera y así regresar el resultado de la división entera.Si _n_ es menor a _m_ entonces regreso el contador ya que es la cantidad de veces que se cumplió la condición de que _n_ era menor a _m_.
 
 ```
-divE :: Int -> Int -> Int
+divE 0 m = error "No se puede dividir entre 0"
 divE n m = divEAux n m 0
 
 divEAux :: Int -> Int -> Int -> Int
@@ -94,22 +94,24 @@ cola (x:xs) = xs
 
 **La función quita**
 
-Lo que hice en esta función fue una firma de un entero y una lista de enteros y regreso una lista de enteros con n elementos menos que la lista que recibo. En mi primer caso recibo 0 y una lista de enteros,regreso la misma porque no estoy quitando ningún elemento.En mi segundo caso recibo un entero y una lista con más de un elemento donde lo que voy a hacer es definir una función constructiva donde voy a ir quitando elementos de la lista hasta que n llegue a 0 (disminuyendo su valor en 1 cada vez que se llama la función) y así regresar la lista con n elementos menos que la lista que recibo.
+Lo que hice en esta función fue una firma de un entero y una lista de enteros y regreso una lista de enteros con n elementos menos que la lista que recibo. En mi primer caso quiero quitar un elemento de una lista vacía pero no puedo ya que por definición no es posible por lo cual lanzo un error, en el segundo caso recibo 0 y una lista de enteros,regreso la misma porque no estoy quitando ningún elemento.En mi segundo caso recibo un entero y una lista con más de un elemento donde lo que voy a hacer es definir una función constructiva donde voy a ir quitando elementos de la lista hasta que n llegue a 0 (disminuyendo su valor en 1 cada vez que se llama la función) y así regresar la lista con n elementos menos que la lista que recibo.
 
 ```
 quita :: Int -> [Int] -> [Int]
+quita n [] = error "No se puede quitar elementos de una lista vacia"
 quita 0 lst = lst
-quita n (x:xs) = quita (n-1) xs
+quita n (x:xs) = quita (n-1) xs 
 ```
 
 ---
 
 **La función enesimo**
 
-Lo que hice en esta función fue una firma de un entero y una lista de enteros que regresa un entero. En mi primer caso recibo 0 y una lista de enteros,regreso el primer elemento de la lista ,con el método cabeza que había implementado anteriormente, ya que es el elemento que se encuentra en la posición 0.En mi segundo caso recibo un entero y una lista con más de un elemento en la cual voy a ir quitando elementos de la lista hasta que n llegue a 0 (disminuyendo su valor en 1 cada vez que se llama la función) y así regresar el elemento que se encuentra en la posición n de la lista que recibo.
+Lo que hice en esta función fue una firma de un entero y una lista de enteros que regresa un entero. En mi primer recibo n elemento que quiero regresar pero al ser una lista no puedo saber la ubicación de un elemento que no existe por eso regreso un error , en el segundo caso recibo 0 y una lista de enteros,regreso el primer elemento de la lista ,con el método cabeza que había implementado anteriormente, ya que es el elemento que se encuentra en la posición 0.En mi segundo caso recibo un entero y una lista con más de un elemento en la cual voy a ir quitando elementos de la lista hasta que n llegue a 0 (disminuyendo su valor en 1 cada vez que se llama la función) y así regresar el elemento que se encuentra en la posición n de la lista que recibo.
 
 ```
 enesimo :: Int -> [Int] -> Int
+enesimo n [] = error "No se puede obtener el enesimo elemento de una lista vacia"
 enesimo 0 lst = cabeza lst
 enesimo n (x:xs) = enesimo (n-1) xs
 ```
