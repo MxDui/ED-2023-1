@@ -22,9 +22,8 @@ absoluto n = if n >= 0 then  n else -n
 
 -- La función divE n m, que recibe dos enteros y devuelve la división entera de n y m.
 divE :: Int -> Int -> Int
-divE n m = if (n < m)
-        then n 
-        else divE (n-m) m 
+divE n m = (div n m) - (mod n m) `div` m
+
 
 -- Tu propia versión de head y tail que se llamen cabeza y cola respectivamente.
 cabeza :: [Int] -> Int 
