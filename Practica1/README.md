@@ -51,7 +51,7 @@ maximo n m = if (n >= m) then  n else  m
 
 **La función absoluto**
 
-En esta función lo que hice fue una firma de 2 int ya que recibe un número entero y regreso un número entero, aquí lo que hice fue comparar si n es mayor o igual a 0 para regresar el valor de n pero con un signo positivo ya que de esta manera sería el valor absoluto de n , si no es mayor o igual entonces regreso el valor de n ya que es menor que 0 y por lo tanto es el valor absoluto de n.
+En esta función lo que hice fue una firma de 2 int ya que recibe un número entero y regreso un número entero, aquí lo que hice fue comparar si n es mayor o igual a 0 para regresar el valor de n pero con un signo positivo ya que de esta manera sería el valor absoluto de n , si no es mayor o igual entonces regreso el valor de -n ya que es menor que 0 y por lo tanto -n donde n es un entero menor a 0 es igual a n.
 
 ```
 absoluto :: Int -> Int
