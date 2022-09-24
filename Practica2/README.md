@@ -2,7 +2,7 @@
 
 ## David Rivera Morales -- 320176876
 
-## Israel Rivera -- XXXXXXX
+## Israel Rivera -- 320490747
 
 ---
 
