@@ -133,7 +133,7 @@ listaCollatz 1 = [0]
 listaCollatz x = if mod x 2 == 0 && x >= 0 then x : listaCollatz (div x 2) else x : listaCollatz (3 * x + 1)
 ```
 
-## Expresiones aritméticas.
+## Expresiones aritméticas
 
 Dentro de este inciso lo importante es hacer la instancia de la clase Show para poder imprimir las expresiones aritméticas, para esto se utiliza la función show que toma una expresión aritmética y regresa un string. Para poder hacer la instancia de la clase Show se utiliza la palabra reservada instance seguida de la clase Show y el tipo de dato que se quiere hacer la instancia, en este caso EA. En la función show se evalúa el tipo de dato que es la expresión aritmética y se regresa el string correspondiente .Por ejemplo si Positivo (N (x)) es el tipo de dato , se regresa el string "x" ya que es un número positivo.
 Aunado a esto , para implementar las demás funciones se deben utilizar tipos de dato EA ya que se están implementando funciones que reciben expresiones aritméticas y regresan expresiones aritméticas por lo que también se debe pasar tipos de dato EA a la hora de llamar a las funciones.
