@@ -81,7 +81,7 @@ elemento elm (x : xs) = if elm == x then True else elemento elm xs
 ## La función nicomaco
 
 En la función nicomaco se evalúa si el número es 0 como caso base ya que 0 tiene divisores infinitos por lo cual se retorna un error, de lo contrario se evalúa si la suma de los divisores es mayor que el número, en caso de serlo se retorna abudante , si ninguno de los casos anteriores se cumple se concluye que el número es deficiente y se retorna deficiente. Para calcular los divisores se utiliza la función suma_alquota que toma un caso base donde 0 tiene 0 divisores , si no es así se hace la suma de los
-divisores con sum que forma parte de la librería predefinida de Haskell , en sum se hace una lista con los divisores a partir de 1 hasta el número - 1 y se evalúa si el número es divisible entre el divisor, en caso de serlo se agrega el divisor a la lista de divisores, de lo contrario se agrega 0 a la lista de divisores.
+divisores con sum que forma parte de la librería predefinida de Haskell , en sum se hace una lista con los divisores a partir de 1 hasta el número - 1 y se evalúa si el número es divisible entre el divisor, en caso de serlo se agrega el divisor a la lista de divisores, de lo contrario no se agrega a la lista de divisores.
 
 ```haskell
 data Categoria = Perfecto | Deficiente | Abundante deriving (Show, Eq)
