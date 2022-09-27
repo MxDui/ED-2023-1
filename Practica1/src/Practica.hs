@@ -54,6 +54,11 @@ enesimo 0 lst = cabeza lst
 enesimo n (x:xs) = enesimo (n-1) xs
 
 
+myMod :: Int -> Int -> Int
+myMod n m = if (n < m)
+then n             -- Caso base
+else myMod (n-m) m -- Caso recursivo
+
 
 
 
