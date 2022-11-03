@@ -9,7 +9,7 @@ instance Show LProp where
   show PTrue = "True"
   show PFalse = "False"
   show (Var x) = x
-  show (Neg x) = "¬" ++ show x
+  show (Neg x) = "!" ++ show x
   show (Conj x y) = "(" ++ show x ++ " ∧ " ++ show y ++ ")"
   show (Disy x y) = "(" ++ show x ++ " ∨ " ++ show y ++ ")"
   show (Impl x y) = "(" ++ show x ++ " → " ++ show y ++ ")"
@@ -66,6 +66,30 @@ dist (Disy (Conj y z) x) = Conj (Disy y x) (Disy z x)
 dist x = x
 
 
+deMorgan :: LProp -> LProp
+deMorgan (Neg (Conj x y)) = Disy (Neg x) (Neg y)
+deMorgan (Neg (Disy x y)) = Conj (Neg x) (Neg y)
+deMorgan x = x
+
+
+equiv_op :: LProp -> LProp
+equiv_op (Conj x y) = Conj (equiv_op x) (equiv_op y)
+equiv_op (Disy x y) = Disy (equiv_op x) (equiv_op y)
+equiv_op (Impl x y) = Disy (Neg (equiv_op x)) (equiv_op y)
+equiv_op (Syss x y) = Conj (Disy (Neg (equiv_op x)) (equiv_op y)) (Disy (Neg (equiv_op y)) (equiv_op x))
+equiv_op x = x
+
+
+dobleNeg :: LProp -> LProp
+dobleNeg (Neg (Neg x)) = dobleNeg x
+dobleNeg (Conj x y) = Conj (dobleNeg x) (dobleNeg y)
+dobleNeg (Disy x y) = Disy (dobleNeg x) (dobleNeg y)
+dobleNeg (Impl x y) = Impl (dobleNeg x) (dobleNeg y)
+dobleNeg (Syss x y) = Syss (dobleNeg x) (dobleNeg y)
+dobleNeg (Neg x) = Neg (dobleNeg x)
+dobleNeg x = x
+
+
 num_conectivos :: LProp -> Int
 num_conectivos PTrue = 0
 num_conectivos PFalse = 0
@@ -75,6 +99,8 @@ num_conectivos (Conj x y) = 1 + num_conectivos x + num_conectivos y
 num_conectivos (Disy x y) = 1 + num_conectivos x + num_conectivos y
 num_conectivos (Impl x y) = 1 + num_conectivos x + num_conectivos y
 num_conectivos (Syss x y) = 1 + num_conectivos x + num_conectivos y
+
+
 
 
 
