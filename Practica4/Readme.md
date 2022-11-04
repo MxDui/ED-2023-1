@@ -6,7 +6,7 @@
 
 ### La función asocia_der
 
-<!-- explicacion aqui -->
+#### Función que recibe una LProp y no importa el orden en que se ejecuten las operaciones no altere el resultado, siempre y cuando se mantenga intacta la secuencia de los operandos, de izquierda a la derecha sobre los elementos de la expresión
 
 ```haskell
 asocia_der :: LProp -> LProp
@@ -23,7 +23,7 @@ asocia_der x = x
 
 ### La función asocia_izq
 
-<!-- explicacion aqui -->
+#### Función que recibe una LProp y no importa el orden en que se ejecuten las operaciones no altere el resultado, siempre y cuando se mantenga intacta la secuencia de los operandos, de derecha a la izquierda sobre los elementos de la expresión
 
 ```haskell
 asocia_izq :: LProp -> LProp
@@ -40,7 +40,7 @@ asocia_izq x = x
 
 ### La función conm
 
-<!-- La explicacion aqui -->
+#### Función que recibe una LProp, en el que el orden de los factores no altera el resultado, de forma exhaustiva sobre los elementos de la expresión cuyo operador lógico sea conjunción o disyunción.
 
 ```haskell
 conm :: LProp -> LProp
@@ -53,7 +53,7 @@ conm x = x
 
 ### La función dist
 
-<!-- explicacion aqui -->
+#### Función que recibe una LProp que tenga conectores de conjunción y disyunción estos se reformulen estructuralmentemanteniendo el mismo resultado, de forma exhaustiva sobre toda la expresión.
 
 ```haskell
 dist :: LProp -> LProp
@@ -68,7 +68,7 @@ dist x = x
 
 ### La función deMorgan
 
-<!-- la explicacion aqui -->
+#### Función que le aplica a una LProp, teniendo en cuenta que el opuesto de una conjunción es equivalente a la disyunción que se forma con los opuestos o negaciones de las proposiciones que conforman la conjunción y la negación de la disyunción se puede expresar como una conjunción conformada por los opuestos o negaciones de las proposiciones involucradas en la disyunción.
 
 ```haskell
 deMorgan :: LProp -> LProp
@@ -79,7 +79,7 @@ deMorgan x = x
 
 ### La función equiv_op
 
-<!-- explicacion aqui -->
+#### Función que recibe una LProp y debido a que sus valores de verdad siempre eson iguales se pueden sustituir una por otra,sin afectar esos valores de verdad
 
 ```haskell
 equiv_op :: LProp -> LProp
@@ -92,7 +92,7 @@ equiv_op x = x
 
 ### La función dobleNeg
 
-<!-- explicacion aqui -->
+#### Función que quita las dobles negaciones de una LProp, de forma en la cual vuelva a quedar en su forma original en cualquier caso
 
 ```haskell
 dobleNeg :: LProp -> LProp
@@ -107,7 +107,7 @@ dobleNeg x = x
 
 ### La función num_conectivos
 
-<!-- explicacion aqui -->
+#### Función que redibe una LProp y cada que exista un conectivo lógico agrega 1 hasta terminar toda la expresión, haciendo que el contador crezca por cada conectivo encontrado, respondiendo con el número de conectivos existentes
 
 ```haskell
 num_conectivos :: LProp -> Int
@@ -123,7 +123,7 @@ num_conectivos (Syss x y) = 1 + num_conectivos x + num_conectivos y
 
 ### La función interpretacion
 
-<!-- explicacion aqui -->
+#### Esta función va a tomar una LProp ψ y una asignación para regresar la interpretacion de ψ a partir de los valores de la asignación
 
 ```haskell
 interpretacion:: LProp -> Asignacion -> Int
@@ -136,7 +136,6 @@ interpretacion (Disy   exp1 exp2) vs = if (interpretacion exp1 vs) == 0 || (inte
 interpretacion (Impl   exp1 exp2) vs = if (interpretacion exp2 vs) == 1 || (interpretacion exp1 vs)-1 == 0 then 0 else 1
 interpretacion (Syss exp1 exp2) vs = if (interpretacion exp1 vs) ==  (interpretacion exp2 vs) then 1 else 0
 
---Funcion que dada una asignación, coloca a cada letra el valor requerido. Auxiliar de interpretación
 asignaValor:: Eq a => a -> [(a,b)] -> b
 asignaValor x ((a,b):xs) = if a == x then b else asignaValor x xs
 ```

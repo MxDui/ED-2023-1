@@ -1,8 +1,15 @@
-data LProp = PTrue | PFalse | Var Nombre | Neg LProp | 
-            Conj LProp LProp | Disy LProp LProp | Impl LProp LProp | 
-            Syss LProp LProp
+data LProp
+  = PTrue
+  | PFalse
+  | Var Nombre
+  | Neg LProp
+  | Conj LProp LProp
+  | Disy LProp LProp
+  | Impl LProp LProp
+  | Syss LProp LProp
 
 type Nombre = String -- Nombre es un sinonimo para String.
+
 type Asignacion = [(Nombre, Int)] -- Una asignación es una lista de tuplas.
 
 instance Show LProp where
@@ -58,17 +65,15 @@ dist :: LProp -> LProp
 dist (Conj x (Disy y z)) = Disy (Conj x y) (Conj x z)
 dist (Conj (Disy y z) x) = Disy (Conj y x) (Conj z x)
 dist (Disy x (Conj y z)) = Conj (Disy x y) (Disy x z)
-dist (Disy (Conj y z) x) = Conj (Disy y x) (Disy z x )
+dist (Disy (Conj y z) x) = Conj (Disy y x) (Disy z x)
 dist (Impl x y) = Impl x y
 dist (Syss x y) = Syss x y
 dist x = x
-
 
 deMorgan :: LProp -> LProp
 deMorgan (Neg (Conj x y)) = Disy (Neg x) (Neg y)
 deMorgan (Neg (Disy x y)) = Conj (Neg x) (Neg y)
 deMorgan x = x
-
 
 equiv_op :: LProp -> LProp
 equiv_op (Conj x y) = Conj (equiv_op x) (equiv_op y)
@@ -76,7 +81,6 @@ equiv_op (Disy x y) = Disy (equiv_op x) (equiv_op y)
 equiv_op (Impl x y) = Disy (Neg (equiv_op x)) (equiv_op y)
 equiv_op (Syss x y) = Conj (Disy (Neg (equiv_op x)) (equiv_op y)) (Disy (Neg (equiv_op y)) (equiv_op x))
 equiv_op x = x
-
 
 dobleNeg :: LProp -> LProp
 dobleNeg (Neg (Neg x)) = dobleNeg x
@@ -86,7 +90,6 @@ dobleNeg (Impl x y) = Impl (dobleNeg x) (dobleNeg y)
 dobleNeg (Syss x y) = Syss (dobleNeg x) (dobleNeg y)
 dobleNeg (Neg x) = Neg (dobleNeg x)
 dobleNeg x = x
-
 
 num_conectivos :: LProp -> Int
 num_conectivos PTrue = 0
@@ -98,21 +101,16 @@ num_conectivos (Disy x y) = 1 + num_conectivos x + num_conectivos y
 num_conectivos (Impl x y) = 1 + num_conectivos x + num_conectivos y
 num_conectivos (Syss x y) = 1 + num_conectivos x + num_conectivos y
 
-interpretacion:: LProp -> Asignacion -> Int
+interpretacion :: LProp -> Asignacion -> Int
 interpretacion PTrue asig = 1
 interpretacion PFalse asig = 0
 interpretacion (Var a) asig = asignaValor a asig
-interpretacion (Neg    expr)  vs = (interpretacion expr vs)-1
-interpretacion (Conj   exp1 exp2) vs = if (interpretacion exp1 vs) == 1 && (interpretacion exp2 vs) == 1 then 1 else 0
-interpretacion (Disy   exp1 exp2) vs = if (interpretacion exp1 vs) == 0 || (interpretacion exp2 vs) == 0 then 1 else 0 --check this
-interpretacion (Impl   exp1 exp2) vs = if (interpretacion exp2 vs) == 1 || (interpretacion exp1 vs)-1 == 0 then 0 else 1
-interpretacion (Syss exp1 exp2) vs = if (interpretacion exp1 vs) ==  (interpretacion exp2 vs) then 1 else 0
+interpretacion (Neg expr) vs = (interpretacion expr vs) - 1
+interpretacion (Conj exp1 exp2) vs = if (interpretacion exp1 vs) == 1 && (interpretacion exp2 vs) == 1 then 1 else 0
+interpretacion (Disy exp1 exp2) vs = if (interpretacion exp1 vs) == 0 || (interpretacion exp2 vs) == 0 then 1 else 0 -- check this
+interpretacion (Impl exp1 exp2) vs = if (interpretacion exp2 vs) == 1 || (interpretacion exp1 vs) - 1 == 0 then 0 else 1
+interpretacion (Syss exp1 exp2) vs = if (interpretacion exp1 vs) == (interpretacion exp2 vs) then 1 else 0
 
---Funcion que dada una asignación, coloca a cada letra el valor requerido. Auxiliar de interpretación 
-asignaValor:: Eq a => a -> [(a,b)] -> b
-asignaValor x ((a,b):xs) = if a == x then b else asignaValor x xs
-
-
-
-
-
+-- Funcion que dada una asignación, coloca a cada letra el valor requerido. Auxiliar de interpretación
+asignaValor :: Eq a => a -> [(a, b)] -> b
+asignaValor x ((a, b) : xs) = if a == x then b else asignaValor x xs
