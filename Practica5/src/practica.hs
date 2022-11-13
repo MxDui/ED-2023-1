@@ -5,18 +5,6 @@ type Nombre = String
 data LProp = T | F | VarP Nombre | Conj LProp LProp | Disy LProp LProp |
                 Impl LProp LProp | Syss LProp LProp | Neg LProp deriving (Show, Eq)
 
--- -- make a show instance for LProp
--- instance Show LProp where
---     show T = "True"
---     show F = "False"
---     show (VarP x) = x
---     show (Neg x) = "!" ++ show x
---     show (Conj x y) = "(" ++ show x ++ " ∧ " ++ show y ++ ")"
---     show (Disy x y) = "(" ++ show x ++ " ∨ " ++ show y ++ ")"
---     show (Impl x y) = "(" ++ show x ++ " → " ++ show y ++ ")"
---     show (Syss x y) = "(" ++ show x ++ " ↔ " ++ show y ++ ")"
-
-
 --Tipo para el Tableaux
 data Tableaux = Hoja [LProp] | Alpha [LProp] Tableaux |
                  Beta [LProp] Tableaux Tableaux deriving (Show, Eq)
@@ -25,6 +13,7 @@ data Tableaux = Hoja [LProp] | Alpha [LProp] Tableaux |
 
 
 {- literales (1 punto) Función que nos dice si en una lista de fórmulas, todas son literales. -}
+
 literales :: [LProp] -> Bool
 literales [] = True
 literales (x:xs) = case x of
@@ -68,7 +57,7 @@ alpha (Neg (Impl x y)) = case x of
 
 alpha _ = False
 
-
+{- beta (1 punto) Nos dice si una fórmula f es una fórmula β -}
 
 {- sigma (1 punto) Nos dice si una fórmula f es una fórmula σ , las fórmulas σ ¬¬σ ¬True ¬False -}
 
@@ -78,3 +67,25 @@ sigma (Neg T) = False
 sigma (Neg F) = True
 sigma _ = False
 
+{- expSigma (1 punto) Dada una lista de fórmulas l y una fórmula f, realiza la expansión sigma de f sobre la lista l. -}
+-- base case
+
+expSigma :: [LProp] -> LProp -> [LProp]
+expSigma [] _ = []
+expSigma (x:xs) f = case x of
+    Neg (Neg y) -> (y) : expSigma xs f
+    Neg T -> (F) : expSigma xs f
+    Neg F -> (T) : expSigma xs f
+    _ -> x : expSigma xs f
+
+{- expAlpha (1 punto) Dada una lista de fórmulas l y una fórmula f, realiza la expansión alpha de f sobre la lista l. -}
+
+expAlpha :: [LProp] -> LProp -> [LProp]
+expAlpha [] _ = []
+expAlpha (x:xs) f = case x of
+    Conj y z -> (y) : (z) : expAlpha xs f
+    Neg (Disy y z) -> (Neg y) : (Neg z) : expAlpha xs f
+    Neg (Impl y z) -> (y) : (Neg z) : expAlpha xs f
+    _ -> x : expAlpha xs f
+
+{- expBeta (1 punto) Dada una lista de fórmulas l y una fórmula f, realiza la expansión beta de f sobre la lista l. -}
