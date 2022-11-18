@@ -1,7 +1,5 @@
---Alias para variables
 type Nombre = String
 
---Tipo para las proposiciones
 data LProp
   = T
   | F
@@ -13,14 +11,11 @@ data LProp
   | Neg LProp
   deriving (Show, Eq)
 
---Tipo para el Tableaux
 data Tableaux
   = Hoja [LProp]
   | Alpha [LProp] Tableaux
   | Beta [LProp] Tableaux Tableaux
   deriving (Show, Eq)
-
-{- literales (1 punto) Función que nos dice si en una lista de fórmulas, todas son literales. -}
 
 literales :: [LProp] -> Bool
 literales [] = True
@@ -29,16 +24,12 @@ literales (x : xs) = case x of
   Neg (VarP _) -> literales xs
   _ -> False
 
-{- nextF (1 punto) Función que regresa la primera fórmula que no es literal de una lista de fórmulas. -}
-
 nextF :: [LProp] -> LProp
 nextF [] = error "No hay fórmulas"
 nextF (x : xs) = case x of
   VarP _ -> nextF xs
   Neg (VarP _) -> nextF xs
   _ -> x
-
-{- alpha (1 punto) Nos dice si una fórmula f es una fórmula α como tabla semántica. -}
 
 alpha :: LProp -> Bool
 alpha (Conj x y) = case x of
@@ -64,35 +55,29 @@ alpha (Neg (Impl x y)) = case x of
     _ -> True
 alpha _ = False
 
-{- beta (1 punto) Nos dice si una fórmula f es una fórmula β  con la forma (β1 ∨ β1)  ¬(β1 ∧ β1) (β1 → β1) -}
-
 beta :: LProp -> Bool
-{- beta (Disy (VarP "p") (Conj (VarP "r") (VarP "s"))) = True -}
-
 beta (Disy x y) = case x of
-  Conj _ _ -> False
-  Impl _ _ -> False
+  Conj _ _ -> True
+  Impl _ _ -> True
   _ -> case y of
     Conj _ _ -> True
     Impl _ _ -> True
     _ -> True
 beta (Neg (Conj x y)) = case x of
-  Disy _ _ -> False
-  Impl _ _ -> False
+  Disy _ _ -> True
+  Impl _ _ -> True
   _ -> case y of
-    Disy _ _ -> False
-    Impl _ _ -> False
+    Disy _ _ -> True
+    Impl _ _ -> True
     _ -> True
 beta (Neg (Impl x y)) = case x of
-  Conj _ _ -> False
-  Disy _ _ -> False
+  Conj _ _ -> True
+  Disy _ _ -> True
   _ -> case y of
-    Conj _ _ -> False
-    Disy _ _ -> False
+    Conj _ _ -> True
+    Disy _ _ -> True
     _ -> True
 beta _ = False
-
-{- sigma (1 punto) Nos dice si una fórmula f es una fórmula σ , las fórmulas σ ¬¬σ ¬True ¬False -}
 
 sigma :: LProp -> Bool
 sigma (Neg (Neg x)) = True
@@ -100,28 +85,52 @@ sigma (Neg T) = False
 sigma (Neg F) = True
 sigma _ = False
 
-{- expSigma (1 punto) Dada una lista de fórmulas l y una fórmula f, realiza la expansión sigma de f sobre la lista l. -}
--- base case
-
 expSigma :: [LProp] -> LProp -> [LProp]
 expSigma [] _ = []
-expSigma (x : xs) f = case x of
-  Neg (Neg y) -> (y) : expSigma xs f
-  Neg T -> (F) : expSigma xs f
-  Neg F -> (T) : expSigma xs f
-  _ -> x : expSigma xs f
-
-{- expAlpha (1 punto) Dada una lista de fórmulas l y una fórmula f, realiza la expansión alpha de f sobre la lista l. -}
+expSigma (x : xs) f = case f of
+  Neg (Neg x) -> [x] ++ xs
+  Neg T -> [F] ++ xs
+  Neg F -> [T] ++ xs
+  _ -> [f] ++ xs
 
 expAlpha :: [LProp] -> LProp -> [LProp]
 expAlpha [] _ = []
-expAlpha (x : xs) f = case x of
-  Conj y z -> (y) : (z) : expAlpha xs f
-  Neg (Disy y z) -> (Neg y) : (Neg z) : expAlpha xs f
-  Neg (Impl y z) -> (y) : (Neg z) : expAlpha xs f
-  _ -> x : expAlpha xs f
+expAlpha (x : xs) f = case f of
+  Conj x y -> [x] ++ [y] ++ xs
+  Neg (Disy x y) -> [Neg x] ++ [Neg y] ++ xs
+  Neg (Impl x y) -> [x] ++ [Neg y] ++ xs
+  _ -> [f] ++ xs
 
-{- expBeta (1 punto) Dada una lista de fórmulas l y una fórmula f, realiza la expansión beta de f sobre la lista l. con las reglas (β1 ∨ β1)=>β1 β2 ¬(β1 ∧ β1)=>¬β1 ¬β2 (β1 → β1)=>¬β1 β2 -}
+extract :: [LProp] -> LProp -> [LProp]
+extract [] _ = []
+extract (x : xs) f = case x of
+  VarP _ -> [x] ++ extract xs f
+  Neg (VarP _) -> [x] ++ extract xs f
+  _ -> extract xs f
 
--- todo 
--- make expBeta and correct beta and constTableaux
+expBeta :: [LProp] -> LProp -> ([LProp], [LProp])
+expBeta [] _ = ([], [])
+expBeta [x] _ = ([x], [])
+expBeta (x : xs) f =
+  let first = [x]
+   in case f of
+        Disy x y -> ([x] ++ extract xs f ++ first, [y] ++ extract xs f ++ first)
+        Neg (Conj x y) -> ([Neg x] ++ extract xs f ++ first, [Neg y] ++ extract xs f ++ first)
+        Impl x y -> ([Neg x] ++ extract xs f ++ first, [y] ++ extract xs f ++ first)
+        _ -> ([f] ++ extract xs f ++ first, [f] ++ extract xs f ++ first)
+
+consTableaux :: LProp -> Tableaux
+consTableaux f = case f of
+  VarP _ -> Hoja [f]
+  Neg (VarP _) -> Hoja [f]
+  _ -> case f of
+    Conj x y -> Alpha [f] (consTableaux x)
+    Disy x y -> Beta [f] (consTableaux x) (consTableaux y)
+    Neg (Disy x y) -> Alpha [f] (consTableaux (Neg x))
+    Neg (Conj x y) -> Beta [f] (consTableaux (Neg x)) (consTableaux (Neg y))
+    Impl x y -> Beta [f] (consTableaux (Neg x)) (consTableaux y)
+    Neg (Impl x y) -> Alpha [f] (consTableaux x)
+    Syss x y -> Alpha [f] (consTableaux (Impl x y))
+    Neg (Syss x y) -> Beta [f] (consTableaux (Impl x y)) (consTableaux (Impl y x))
+    Neg (Neg x) -> consTableaux x
+    _ -> Hoja [f]
